@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Transcriptomic Analysis Tool</title>
+<link rel="stylesheet" href="/static/style.css"></head>
+<body><div class="container">
+<h1>Transcriptomic Visualization Tool</h1>
+<p>Upload your DESeq2 output CSV to generate visualizations and enrichment analysis.</p>
+<form action="/analyze" method="POST" enctype="multipart/form-data">
+<div class="upload-box">
+<input type="file" name="file" accept=".csv" required><br><br>
+<button type="submit">Analyze</button>
+</div></form>
+<div class="info"><h3>Expected CSV columns:</h3>
+<code>gene, baseMean, log2FoldChange, pvalue, padj</code></div>
+</div></body></html>
