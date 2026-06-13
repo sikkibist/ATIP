@@ -1,0 +1,8 @@
+flask
+pandas
+plotly
+requests
+fpdf2
+numpy
+kaleido
+python-docx
