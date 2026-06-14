@@ -28,4 +28,46 @@
 <button type="submit">Download PDF Report</button>
 </form>
 <br><a href="/"><button>Analyze another file</button></a>
+
+<hr>
+<h2>AI Biological Interpretation</h2>
+<div class="stats-box">
+<p>Enter your Groq API key and experimental context to generate a biological interpretation.</p>
+<input type="text" id="api_key" placeholder="Groq API key" style="width:400px;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:4px;">
+<br>
+<input type="text" id="context" placeholder="e.g. bleomycin vs control" style="width:400px;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:4px;">
+<br>
+<button onclick="getInterpretation()" id="ai_btn">Generate Interpretation</button>
+<div id="ai_result" style="margin-top:15px;padding:15px;background:#f9f9f9;border-radius:6px;display:none;white-space:pre-wrap;line-height:1.6;"></div>
+</div>
+<script>
+function getInterpretation() {
+    var key = document.getElementById("api_key").value;
+    var context = document.getElementById("context").value;
+    var btn = document.getElementById("ai_btn");
+    var result = document.getElementById("ai_result");
+    if (!key) { alert("Please enter your Groq API key"); return; }
+    btn.textContent = "Generating...";
+    btn.disabled = true;
+    result.style.display = "none";
+    var form = new FormData();
+    form.append("filepath", "{{ filepath }}");
+    form.append("api_key", key);
+    form.append("context", context);
+    fetch("/interpret", {method: "POST", body: form})
+        .then(r => r.text())
+        .then(text => {
+            result.textContent = text;
+            result.style.display = "block";
+            btn.textContent = "Generate Interpretation";
+            btn.disabled = false;
+        })
+        .catch(err => {
+            result.textContent = "Error: " + err;
+            result.style.display = "block";
+            btn.textContent = "Generate Interpretation";
+            btn.disabled = false;
+        });
+}
+</script>
 </div></body></html>

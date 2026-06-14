@@ -105,5 +105,20 @@ def download_enrichment():
             download_name="enrichment_results.docx",
             mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
 
+
+@app.route("/interpret", methods=["POST"])
+def interpret():
+    filepath = request.form.get("filepath")
+    api_key = request.form.get("api_key")
+    context = request.form.get("context", "treatment vs control")
+    df = load_deseq2(filepath)
+    enrichment = run_enrichment(df)
+    stats = {"total_genes": len(df), "significant": int(df["significant"].sum()),
+        "upregulated": int((df["direction"]=="upregulated").sum()),
+        "downregulated": int((df["direction"]=="downregulated").sum())}
+    from modules.ai_interpret import get_biological_interpretation
+    interpretation = get_biological_interpretation(stats, enrichment, api_key, context)
+    return interpretation
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=7860)
