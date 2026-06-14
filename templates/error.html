@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head><title>Error</title><link rel="stylesheet" href="/static/style.css"></head>
+<body><div class="container">
+<h1 style="color:red">Upload Error</h1>
+<div class="stats-box">
+<p><strong>{{ error }}</strong></p>
+<p>Please check your CSV file has the required columns: baseMean, log2FoldChange, pvalue, padj</p>
+</div>
+<br><a href="/"><button>Try Again</button></a>
+</div></body></html>

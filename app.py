@@ -24,7 +24,10 @@ def analyze():
         return "No file selected", 400
     filepath = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
     file.save(filepath)
-    df = load_deseq2(filepath)
+    try:
+        df = load_deseq2(filepath)
+    except ValueError as e:
+        return render_template("error.html", error=str(e))
     enrichment = run_enrichment(df)
     stats = {"total_genes": len(df), "significant": int(df["significant"].sum()),
         "upregulated": int((df["direction"]=="upregulated").sum()),

@@ -8,7 +8,32 @@
 <form action="/analyze" method="POST" enctype="multipart/form-data">
 <div class="upload-box">
 <input type="file" name="file" accept=".csv" required><br><br>
-<button type="submit">Analyze</button>
+<button type="submit" id="submit_btn" onclick="showLoading()">Analyze</button>
+<div id="loading" style="display:none;margin-top:20px">
+<div style="background:#3498db;height:6px;border-radius:3px;animation:progress 30s linear forwards" id="bar"></div>
+<p id="loading_msg" style="margin-top:10px;color:#555">Uploading and parsing your CSV...</p>
+</div>
+<style>
+@keyframes progress { from{width:0%} to{width:95%} }
+</style>
+<script>
+var messages = [
+    [0, "Uploading and parsing your CSV..."],
+    [3, "Generating volcano plot, MA plot, heatmap..."],
+    [8, "Querying Enrichr for KEGG pathways..."],
+    [15, "Querying GO Biological Process terms..."],
+    [22, "Finalizing results..."]
+];
+function showLoading() {
+    document.getElementById("submit_btn").disabled = true;
+    document.getElementById("loading").style.display = "block";
+    messages.forEach(function(m) {
+        setTimeout(function() {
+            document.getElementById("loading_msg").textContent = m[1];
+        }, m[0] * 1000);
+    });
+}
+</script>
 </div></form>
 <div class="info"><h3>Expected CSV columns:</h3>
 <code>gene, baseMean, log2FoldChange, pvalue, padj</code></div>
