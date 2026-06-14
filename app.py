@@ -109,7 +109,7 @@ def download_enrichment():
 @app.route("/interpret", methods=["POST"])
 def interpret():
     filepath = request.form.get("filepath")
-    api_key = request.form.get("api_key")
+    api_key = request.form.get("api_key") or os.environ.get("GROQ_API_KEY", "")
     context = request.form.get("context", "treatment vs control")
     df = load_deseq2(filepath)
     enrichment = run_enrichment(df)
@@ -119,6 +119,52 @@ def interpret():
     from modules.ai_interpret import get_biological_interpretation
     interpretation = get_biological_interpretation(stats, enrichment, api_key, context)
     return interpretation
+
+
+@app.route("/download_section", methods=["POST"])
+def download_section():
+    filepath = request.form.get("filepath")
+    section = request.form.get("section")
+    fmt = request.form.get("format")
+    df = load_deseq2(filepath)
+    enrichment = run_enrichment(df)
+    
+    if section not in enrichment or section == "error":
+        return "Section not found", 404
+    
+    table = enrichment[section]
+    
+    if fmt == "csv":
+        import io
+        buf = io.StringIO()
+        table[["term","pvalue","adj_pvalue","combined_score"]].to_csv(buf, index=False)
+        buf.seek(0)
+        from flask import Response
+        return Response(buf.getvalue(), mimetype="text/csv",
+            headers={"Content-Disposition": f"attachment;filename={section}.csv"})
+    
+    elif fmt == "docx":
+        from docx import Document
+        import io
+        doc = Document()
+        doc.add_heading(section.replace("_", " ").title(), 0)
+        t = doc.add_table(rows=1, cols=4)
+        t.style = "Table Grid"
+        hdr = t.rows[0].cells
+        for i, h in enumerate(["Term","P-value","Adj. P-value","Combined Score"]):
+            hdr[i].text = h
+        for _, row in table.head(15).iterrows():
+            cells = t.add_row().cells
+            cells[0].text = str(row["term"])
+            cells[1].text = str(row["pvalue"])
+            cells[2].text = str(row["adj_pvalue"])
+            cells[3].text = str(row["combined_score"])
+        buf = io.BytesIO()
+        doc.save(buf)
+        buf.seek(0)
+        return send_file(buf, as_attachment=True,
+            download_name=f"{section}.docx",
+            mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=7860)

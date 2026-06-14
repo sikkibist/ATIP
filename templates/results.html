@@ -16,11 +16,28 @@
 <h2>Top 50 DEGs Heatmap</h2>{{ heatmap | safe }}
 <h2>Enrichment Analysis</h2>
 {% for key, table in enrichment.items() %}
+{% if key == "error" %}{% else %}
 <h3>{{ key.replace('_', ' ').title() }}</h3>
 <table border="1" cellpadding="5"><tr><th>Term</th><th>P-value</th><th>Adj. P-value</th><th>Combined Score</th></tr>
 {% for _, row in table.iterrows() %}
 <tr><td>{{ row.term }}</td><td>{{ row.pvalue }}</td><td>{{ row.adj_pvalue }}</td><td>{{ row.combined_score }}</td></tr>
 {% endfor %}</table>
+<div style="margin:5px 0 20px 0">
+<form action="/download_section" method="POST" style="display:inline">
+<input type="hidden" name="filepath" value="{{ filepath }}">
+<input type="hidden" name="section" value="{{ key }}">
+<input type="hidden" name="format" value="csv">
+<button type="submit" style="font-size:12px;padding:5px 12px">Download CSV</button>
+</form>
+&nbsp;
+<form action="/download_section" method="POST" style="display:inline">
+<input type="hidden" name="filepath" value="{{ filepath }}">
+<input type="hidden" name="section" value="{{ key }}">
+<input type="hidden" name="format" value="docx">
+<button type="submit" style="font-size:12px;padding:5px 12px">Download DOCX</button>
+</form>
+</div>
+{% endif %}
 {% endfor %}
 <br>
 <form action="/download_report" method="POST">
