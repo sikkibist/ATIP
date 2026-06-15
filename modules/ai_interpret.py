@@ -2,7 +2,10 @@ import os
 from groq import Groq
 
 def get_biological_interpretation(stats, enrichment, api_key, experimental_context="treatment vs control"):
-    client = Groq(api_key=api_key or os.environ.get("GROQ_API_KEY", ""))
+    effective_key = api_key or os.environ.get("GROQ_API_KEY", "")
+    if not effective_key:
+        return "No API key provided. Please enter a Groq API key or contact the administrator."
+    client = Groq(api_key=effective_key)
     
     up_kegg = enrichment.get("upregulated_KEGG", None)
     down_kegg = enrichment.get("downregulated_KEGG", None)
