@@ -15,7 +15,7 @@ def volcano_plot(df):
     fig.add_hline(y=-np.log10(0.05), line_dash='dash', line_color='black')
     fig.add_vline(x=1, line_dash='dash', line_color='black')
     fig.add_vline(x=-1, line_dash='dash', line_color='black')
-    return fig.to_html(full_html=False)
+    return fig.to_html(full_html=False, include_plotlyjs="cdn")
 
 def ma_plot(df):
     df = df.copy()
@@ -26,7 +26,7 @@ def ma_plot(df):
         title='MA Plot',
         labels={'log10baseMean':'log10(baseMean)','log2FoldChange':'log2 Fold Change'})
     fig.add_hline(y=0, line_dash='dash', line_color='black')
-    return fig.to_html(full_html=False)
+    return fig.to_html(full_html=False, include_plotlyjs=False)
 
 def heatmap_top50(df):
     up = df[df['direction']=='upregulated'].nsmallest(25,'padj')
@@ -40,4 +40,4 @@ def heatmap_top50(df):
         colorscale='RdBu_r',
         zmid=0))
     fig.update_layout(title='Top 50 DEGs Heatmap', height=800)
-    return fig.to_html(full_html=False)
+    return fig.to_html(full_html=False, include_plotlyjs=False)

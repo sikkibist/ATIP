@@ -11,9 +11,9 @@
 <p>Upregulated: <strong>{{ stats.upregulated }}</strong></p>
 <p>Downregulated: <strong>{{ stats.downregulated }}</strong></p>
 </div>
-<h2>Volcano Plot</h2>{{ volcano | safe }}
-<h2>MA Plot</h2>{{ ma | safe }}
-<h2>Top 50 DEGs Heatmap</h2>{{ heatmap | safe }}
+<h2>Volcano Plot</h2><div class="lazy-plot" id="volcano-container">{{ volcano | safe }}</div>
+<h2>MA Plot</h2><div class="lazy-plot" id="ma-container">{{ ma | safe }}</div>
+<h2>Top 50 DEGs Heatmap</h2><div class="lazy-plot" id="heatmap-container">{{ heatmap | safe }}</div>
 <h2>Enrichment Analysis</h2>
 {% for key, table in enrichment.items() %}
 {% if key == "error" %}{% else %}
