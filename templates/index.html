@@ -1,20 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head><title>Transcriptomic Analysis Tool</title>
-<link rel="stylesheet" href="/static/style.css"></head>
+<link rel="stylesheet" href="/static/style.css">
+<style>
+#overlay {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);z-index:999;text-align:center;padding-top:200px;}
+#progress-bar {width:60%;margin:20px auto;background:#e0e0e0;border-radius:6px;height:8px;}
+#progress-fill {height:8px;background:#3498db;border-radius:6px;width:0%;transition:width 0.5s;}
+#status-msg {color:#555;font-size:16px;margin-top:15px;}
+</style>
+</head>
 <body><div class="container">
 <h1>Transcriptomic Visualization Tool</h1>
 <p>Upload your DESeq2 output CSV to generate visualizations and enrichment analysis.</p>
-<form action="/analyze" method="POST" enctype="multipart/form-data">
+<form action="/analyze" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
 <div class="upload-box">
 <input type="file" name="file" accept=".csv" required><br><br>
 <button type="submit">Analyze</button>
 </div></form>
 <div style="text-align:center;margin:15px 0;font-size:14px;color:#888">— or —</div>
 <div style="text-align:center;margin-bottom:20px">
-<a href="/load_sample"><button type="button">Try with Sample Data (GSE290476)</button></a>
+<a href="/load_sample" onclick="showLoading()"><button type="button">Try with Sample Data (GSE290476)</button></a>
 <p style="font-size:12px;color:#888;margin-top:5px">Human dermal fibroblasts, bleomycin-induced senescence</p>
 </div>
 <div class="info"><h3>Expected CSV columns:</h3>
 <code>gene, baseMean, log2FoldChange, pvalue, padj</code></div>
-</div></body></html>
+</div>
+
+<div id="overlay">
+<div id="progress-bar"><div id="progress-fill"></div></div>
+<p id="status-msg">Uploading and parsing your CSV...</p>
+</div>
+
+<script>
+var steps = [
+  [0,   0,  "Uploading and parsing your CSV..."],
+  [3,   20, "Generating volcano plot, MA plot, heatmap..."],
+  [8,   40, "Querying Enrichr for KEGG pathways..."],
+  [14,  60, "Querying GO Biological Process terms..."],
+  [20,  80, "Finalizing results..."],
+  [28,  90, "Almost there..."]
+];
+function showLoading() {
+  document.getElementById("overlay").style.display = "block";
+  steps.forEach(function(s) {
+    setTimeout(function() {
+      document.getElementById("progress-fill").style.width = s[1] + "%";
+      document.getElementById("status-msg").textContent = s[2];
+    }, s[0] * 1000);
+  });
+}
+</script>
+</body></html>

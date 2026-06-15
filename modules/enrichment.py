@@ -60,8 +60,8 @@ def run_enrichment(df):
             tasks.append(("downregulated_GO", down_id, "GO_Biological_Process_2023"))
         
         with ThreadPoolExecutor(max_workers=4) as executor:
-            futures = [executor.submit(fetch_section, t) for t in tasks]
-            for future in as_completed(futures):
+            futures = {executor.submit(fetch_section, t): t for t in tasks}
+            for future in as_completed(futures, timeout=60):
                 key, table = future.result()
                 if table is not None:
                     results[key] = table
