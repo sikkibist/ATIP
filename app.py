@@ -169,5 +169,21 @@ def download_section():
             download_name=f"{section}.docx",
             mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
 
+
+@app.route("/load_sample")
+def load_sample():
+    filepath = os.path.join("static", "sample_data.csv")
+    try:
+        df = load_deseq2(filepath)
+    except ValueError as e:
+        return render_template("error.html", error=str(e))
+    enrichment = run_enrichment(df)
+    stats = {"total_genes": len(df), "significant": int(df["significant"].sum()),
+        "upregulated": int((df["direction"]=="upregulated").sum()),
+        "downregulated": int((df["direction"]=="downregulated").sum())}
+    return render_template("results.html", stats=stats,
+        volcano=volcano_plot(df), ma=ma_plot(df), heatmap=heatmap_top50(df),
+        enrichment=enrichment, filepath=filepath)
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=7860)
