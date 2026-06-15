@@ -50,7 +50,7 @@
 <h2>AI Biological Interpretation</h2>
 <div class="stats-box">
 <p>Enter your Groq API key and experimental context to generate a biological interpretation.</p>
-<input type="text" id="api_key" placeholder="Groq API key" style="width:400px;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:4px;">
+<input type="text" id="api_key" placeholder="Groq API key (optional)" style="width:400px;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:4px;">
 <br>
 <input type="text" id="context" placeholder="e.g. bleomycin vs control" style="width:400px;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:4px;">
 <br>
@@ -63,7 +63,7 @@ function getInterpretation() {
     var context = document.getElementById("context").value;
     var btn = document.getElementById("ai_btn");
     var result = document.getElementById("ai_result");
-    if (!key) { alert("Please enter your Groq API key"); return; }
+    // key optional - server uses default if empty
     btn.textContent = "Generating...";
     btn.disabled = true;
     result.style.display = "none";
