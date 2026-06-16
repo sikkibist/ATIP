@@ -1,3 +1,12 @@
+---
+title: ATIP
+emoji: 🧬
+colorFrom: blue
+colorTo: green
+sdk: docker
+pinned: false
+---
+
 # ATIP — AI-Assisted Transcriptomic Interpretation Platform
 
 A web-based bioinformatics tool that takes DESeq2 differential expression output and automatically produces interactive visualizations, functional enrichment analysis, AI-generated biological interpretation, and downloadable reports.
