@@ -6,3 +6,4 @@ fpdf2
 numpy
 kaleido
 python-docx
+groq
