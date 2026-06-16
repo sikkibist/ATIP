@@ -49,9 +49,7 @@
 <hr>
 <h2>AI Biological Interpretation</h2>
 <div class="stats-box">
-<p>Enter your Groq API key and experimental context to generate a biological interpretation.</p>
-<input type="text" id="api_key" placeholder="Groq API key (optional)" style="width:400px;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:4px;">
-<br>
+<p>Describe your experimental context for a tailored biological interpretation.</p>
 <input type="text" id="context" placeholder="e.g. bleomycin vs control" style="width:400px;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:4px;">
 <br>
 <button onclick="getInterpretation()" id="ai_btn">Generate Interpretation</button>
@@ -59,7 +57,7 @@
 </div>
 <script>
 function getInterpretation() {
-    var key = document.getElementById("api_key").value;
+    var key = "";
     var context = document.getElementById("context").value;
     var btn = document.getElementById("ai_btn");
     var result = document.getElementById("ai_result");
